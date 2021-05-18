@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+    api: 
+        build: .
+        expose: 
+            - "3003"
+        ports:
+            - "3003:3003"
+        volumes:   
+            - ./api:/home/node/app/api
+            - ./home/node/app/api/node_modules        
+        depends_on:
+            - mysql
+        env_file: 
+            - api/.env  
+        command: bash -c "cd ./api && npm install && npm run migrate && npm start"
+        networks: 
+            - backend
+    mysql:
+        image: mysql:5.7
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_DATABASE: test-db
+            MYSQL_USER: test
+            MYSQL_PASSWORD: q1w2e3
+            MYSQL_ROOT_PASSWORD: q1w2e3
+        volumes:
+            - .docker/mysql:/var/lib/mysql
+        networks:
+            - backend
+    front: 
+        build: .  
+        expose: 
+            - "8080"
+        ports:
+            - "8080:8080"
+        volumes:   
+            - ./front:/home/node/app/front
+            - ./home/node/app/front/node_modules
+
+        command: bash -c "cd ./front && npm install && npm run serve"
+        
+networks: 
+    backend:
