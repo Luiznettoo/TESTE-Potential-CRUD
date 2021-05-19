@@ -26,6 +26,6 @@ require('dotenv').config()
                 PRIMARY KEY (id))
             ENGINE = InnoDB
             DEFAULT CHARACTER SET = utf8mb4`);
-        process.exit()
+            console.log('executou a query');
     }).catch(error => console.error(error))
     
